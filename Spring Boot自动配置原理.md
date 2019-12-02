@@ -5,6 +5,7 @@ springboot注解EnableAutoConfiguration(开启自动配置功能)，使用AutoCo
  AutoConfigurationImportSelector.class：导入哪些选择器
  将所有需要导入的组件以全类名的方式返回，这些组件会被加入到容器中
  会给容器中导入非常多的自动配置类（XXAutoConfiguration）；就是给容器中导入这个场景需要的所有组件，并配置好这些组件，现有124个
+![部分配置类](https://github.com/LoveChunHua/springboot/blob/master/1575271274.png)
  有了自动配置类，就省去了我们手动编写配置注入功能组件的工作.
  
 使用Spring Initializer快速创建Spring Boot项目：
