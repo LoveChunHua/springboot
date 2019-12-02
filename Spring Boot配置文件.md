@@ -547,9 +547,9 @@ xxxxProperties:封装配置文件中相关属性
 
 ```
 
-**2、细节**
-    
-   
+2、细节
+---
+       
     @Conditional派生注解（Spring注解版原生的@Conditional作用）<br>
     作用：必须是@Conditional指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效<br>
     
