@@ -547,13 +547,13 @@ xxxxProperties:封装配置文件中相关属性
 
 ```
 
-2、细节
----
+**2、细节**
+
        
     @Conditional派生注解（Spring注解版原生的@Conditional作用）<br>
     作用：必须是@Conditional指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效<br>
     
-    ![Conditional扩展](https://github.com/LoveChunHua/springboot/blob/master/157530027.png)
+    ！[Conditional扩展](https://github.com/LoveChunHua/springboot/blob/master/157530027.png)
     
     自动配置类必须在一定的条件下才能生效；<br>
     我们怎么知道哪些自动配置类生效？我们可以通过在application.properties中启用debug=true属性来让控制台打印自动配置报告
