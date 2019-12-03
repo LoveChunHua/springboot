@@ -107,7 +107,7 @@ public class ThymeleafProperties {
     private String mode = "HTML";
     //只要我们把html页面放在"classpath:/templates/"，thymelefa就能帮我们自动渲染了
 ```
-`只需要我们把HTML页面放在classpath:/templates/,thymeleaf就能自动渲染；`
+`只需要我们把HTML页面放在classpath:/templates/,thymeleaf就能自动渲染；`<br>
 使用：<br>
 1、导入Thymeleaf的名称空间<br>
 `<html lang="en" xmlns:th="http://www.thymeleaf.org">`<br>
@@ -130,7 +130,7 @@ public class ThymeleafProperties {
 ---
 1）、th:text;改变当前元素里面的文本内容；<br>
     th：任意html属性；来替换原生属性的值<br>
-  [th内容参照](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#attribute-precedence)
+  [th内容参照](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#attribute-precedence)<br>
 2）、表达式<br>
   [表达式参照](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#standard-expression-syntax)
 ```java
