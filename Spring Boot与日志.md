@@ -39,4 +39,6 @@
     }
   }
 ```
+![image](https://github.com/LoveChunHua/springboot/blob/master/images/bindings.png)
+
 
