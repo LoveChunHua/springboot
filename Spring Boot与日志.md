@@ -41,4 +41,10 @@
 ```
 ![image](https://github.com/LoveChunHua/springboot/blob/master/images/bindings.png)
 
+每一个日志的实现框架都有自己的配置文件。使用slf4j以后，`配置文件还是做成日志实现框架的配置文件`；<br>
 
+2、遗留问题
+===
+
+a(slf4j+logback):Spring(commons-logging)、Hibernate(jboss-logging)、MyBatis、xxxx <br>
+统一日志记录，即使是别的框架和我一起统一使用slf4j
