@@ -107,7 +107,6 @@ public class ThymeleafProperties {
     private String mode = "HTML";
     //只要我们把html页面放在"classpath:/templates/"，thymelefa就能帮我们自动渲染了
 ```
-`只需要我们把HTML页面放在classpath:/templates/,thymeleaf就能自动渲染；`<br>
 使用：<br>
 1、导入Thymeleaf的名称空间<br>
 `<html lang="en" xmlns:th="http://www.thymeleaf.org">`<br>
