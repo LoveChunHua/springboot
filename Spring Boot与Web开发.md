@@ -423,3 +423,42 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
               registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/","/index.html","/user/login");
             }
 ```
+5）、CRUD员工列表
+---
+```java
+实验要求：
+1、RestfulCRUD：CRUD满足Rest风格；
+URI:/资源名称/资源标识 HTTP请求方式区分对资源CRUD操作
+             普通CRUD               	RestfulCRUD
+查询          getEmp                	emp---GET
+添加	    addEmp?xxx                  emp---POST
+修改          updateEmp?id=xxx&xxx=xx     emp/{id}---PUT
+删除          deleteEmp?id=1              emp/{id}---DELETE
+
+2)、实验的请求架构
+                请求URI              请求方式
+查询所有员工     emps                 GET
+查询某个员工     emp/{id}             GET
+来到添加页面     emp                  GET
+添加员工         emp                  POST
+来到修改页面     emp/{id}             GET
+修改员工         emp                  PUT
+删除员工         emp/{id}             DELETE
+3)、员工列表
+thymeleaf公共页面元素抽取
+1、抽取公共片段
+<body>
+    <div th:fragment="copy">
+      &copy; 2011 The Good Thymes Virtual Grocery
+    </div> 
+  </body>
+2、引入公共片段 抽取标签的意思
+<div th:insert="~{footer :: copy}"></div>
+"~{templatename::selector}" 模板名：：选择器
+~{templatename::fragmentname} 模板名：：片段名
+
+三种引入功能片段的th属性
+th:insert:将公共片段整个插入到声明引入的元素中
+th:replace：将声明引入的元素替换为公共片段
+th:include：将被引入的片段的内容包含进这个标签中
+如果使用th:insert等属性进行引入，可以不用写~{} 行内写法可以加上:[[~{}]]
