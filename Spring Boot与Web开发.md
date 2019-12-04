@@ -223,7 +223,7 @@ If you want to take complete control of Spring MVC, you can add your own @Config
         </mvc:interceptor>
     </mvc:interceptors>
 ```
-编写一个配置类（@Configuration），是WebMvcConfigurer类型；不能标注@EnableWebMvc;既保留了所有的自动配置，也能用我们扩展的配置；
+编写一个配置类（@Configuration），是WebMvcConfigurer类型；不能标注@EnableWebMvc，因为这个注解让我们完全接管了SpringMVC导致静态资源无法访问;既保留了所有的自动配置，也能用我们扩展的配置；
 ```java
 //使用WebMvcConfigurer可以来扩展SpringMVC的功能
 @Configuration
@@ -243,3 +243,36 @@ public class MyMvcConfig implements WebMvcConfigurer {
 1)、SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（@Bean，@Component)如果有就用用户配置的，如果没有，才自动配置；如果有些组件可以有多个（ViewResolver)将用户配置的和自己默认的组合起来；
 2）、在SpringBoot中会有非常多的xxxxConfigurer帮助我们进行扩展配置
 ```
+6、RestfulCRUD
+===
+1)、默认访问首页
+---
+```java
+    //所有的WebMvcConfigurer组件都会一起起作用,该方法在配置类中（标注@Configuration的类中）
+    @Bean//将组件注册在容器，很重要
+    public WebMvcConfigurer webMvcConfigurer(){
+        WebMvcConfigurer adapter = new WebMvcConfigurer() {
+            @Override
+            public void addViewControllers(ViewControllerRegistry registry) {
+                registry.addViewController("/").setViewName("index");
+                registry.addViewController("/index.html").setViewName("index");
+            }
+        };
+        return adapter;
+    }
+}
+```
+引入bootstrap从webjars官网<br>
+```java
+        <!--引入bootstrap-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+```
+2)、国际化
+---
+步骤：<br>
+```java
+1、编写国际化配置文件，抽取页面需要显示的国际化
