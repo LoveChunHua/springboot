@@ -280,3 +280,146 @@ public class MyMvcConfig implements WebMvcConfigurer {
 ![image](https://github.com/LoveChunHua/springboot/blob/master/images/%E5%9B%BD%E9%99%85%E5%8C%96.png)
 
 2、SpringBoot自动配置好了管理国际化资源文件的组件；<br>
+```java
+ @Bean
+    @ConfigurationProperties(
+        prefix = "spring.messages"
+    )
+    public MessageSourceProperties messageSourceProperties() {
+        return new MessageSourceProperties();
+    }
+
+    @Bean
+    public MessageSource messageSource(MessageSourceProperties properties) {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        if (StringUtils.hasText(properties.getBasename())) {
+        //setBasename获取国际化资源文件的基础名（去掉语言国家代码的）
+        //我们的配置文件可以直接放在类路径下叫messages.properties;
+        messageSource.setBasenames(StringUtils.commaDelimitedListToStringArray(StringUtils.trimAllWhitespace(properties.getBasename())));
+        }
+
+        if (properties.getEncoding() != null) {
+            messageSource.setDefaultEncoding(properties.getEncoding().name());
+        }
+
+        messageSource.setFallbackToSystemLocale(properties.isFallbackToSystemLocale());
+        Duration cacheDuration = properties.getCacheDuration();
+        if (cacheDuration != null) {
+            messageSource.setCacheMillis(cacheDuration.toMillis());
+        }
+
+        messageSource.setAlwaysUseMessageFormat(properties.isAlwaysUseMessageFormat());
+        messageSource.setUseCodeAsDefaultMessage(properties.isUseCodeAsDefaultMessage());
+        return messageSource;
+    }
+```
+```java
+<body class="text-center">
+		<form class="form-signin" action="dashboard.html">
+			<img class="mb-4" th:src="@{/asserts/img/bootstrap-solid.svg}" src="asserts/img/bootstrap-solid.svg" alt="" width="72" height="72">
+			<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+			<label class="sr-only" th:text="#{login.username}">Username</label>
+			<input type="text" class="form-control" placeholder="Username" required="" autofocus="">
+			<label class="sr-only" th:text="#{login.password}">Password</label>
+			<input type="password" class="form-control" placeholder="Password" required="">
+			<div class="checkbox mb-3">
+				<label>
+          <input type="checkbox" value="remember-me"/> [[#{login.remember}]]
+        </label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.btn}">Sign in</button>
+			<p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+			<a class="btn btn-sm">中文</a>
+			<a class="btn btn-sm">English</a>
+		</form>
+```
+效果：根据浏览器语言设置的信息切换了国际化；<br>
+原理：国际化Locale（区域信息对象）；LocaleResolver（获取区域信息对象）<br>
+默认的就是根据请求头带来的区域信息获取LocaleResolver进行国际化
+```java
+/*
+* 可以在链接上携带区域信息
+* */
+
+<a class="btn btn-sm" th:href="@{/index.html(l='zh_CN')}">中文</a>
+<a class="btn btn-sm" th:href="@{/index.html(l='en_US')}">English</a>
+            
+public class MyLocaleResolver implements LocaleResolver
+{
+    @Override
+    public Locale resolveLocale(HttpServletRequest httpServletRequest) {
+        String l = httpServletRequest.getParameter("l");
+        Locale locale =Locale.getDefault();
+        if(!StringUtils.isEmpty(l)){
+            String[] split = l.split("_");
+            locale = new Locale(split[0],split[1]);
+        }
+        return locale;
+    }
+    
+     @Bean
+    public LocaleResolver localeResolver(){
+        return new MyLocaleResolver();
+    }
+```
+3)、登录
+---
+开发期间模板引擎页面修改以后，需要实时生效<br>
+1、禁用缓存 spring.thymeleaf.cache=false <br>
+2、ctrl + F9重新编译<br>
+```java
+//控制登录
+@Controller
+public class LoginController {
+//    @RequestMapping(value = "/user/login",method = RequestMethod.POST)
+//    @DeleteMapping
+//    @PutMapping
+//    @GetMapping
+    @PostMapping(value = "/user/login")
+    public String login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        Map<String,Object> map){
+        if(!StringUtils.isEmpty(username) &&"123456".equals(password)){
+            //登录成功，防止表单重复提交，可以重定向到主页
+            return "redirect:/main.html";
+        }else{
+            map.put("msg","用户名密码错误");
+            return "login";
+        }
+    }
+```
+登录错误提示演示
+```java
+	<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+	<p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+```  
+4）、拦截器进行登录检查
+---
+```java
+/*登录检查
+*
+* */
+public class LoginHandlerInterceptor implements HandlerInterceptor {
+    //目标方法执行之前
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        Object user = request.getSession().getAttribute("loginUser");
+        if(user == null){
+            //未登录，返回登录页面
+            request.setAttribute("msg","没有权限请先登录");
+            request.getRequestDispatcher("/index.html").forward(request,response);
+            return false;
+        }else{
+            //已登录，放行请求
+            return true;
+        }
+    }
+```
+```java
+ //注册拦截器,从Myconfig中
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                //SpringBoot已经做好了静态资源映射，不需要拦截静态资源
+              registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/","/index.html","/user/login");
+            }
+```
