@@ -276,3 +276,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
 步骤：<br>
 ```java
 1、编写国际化配置文件，抽取页面需要显示的国际化
+```
+![image](https://github.com/LoveChunHua/springboot/blob/master/images/%E5%9B%BD%E9%99%85%E5%8C%96.png)
+
+2、SpringBoot自动配置好了管理国际化资源文件的组件；<br>
